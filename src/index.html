@@ -19,6 +19,30 @@
     });
     // No cross-document view transitions (e.g. Firefox): use the fade fallback.
     if (!("onpagereveal" in window)) document.documentElement.classList.add("vt-fallback");
+    // No speculation rules (Firefox, Safari): prefetch the invitation and its
+    // assets into the cache so opening it doesn't wait on the network.
+    if (!(HTMLScriptElement.supports && HTMLScriptElement.supports("speculationrules"))) {
+      [
+        "invitation.html",
+        "assets/js/invitation.js",
+        "assets/img/photo-1.svg",
+        "assets/img/photo-2.svg",
+        "assets/fonts/cormorant-garamond-normal-400-latin.woff2",
+        "assets/fonts/cormorant-garamond-normal-500-latin.woff2",
+        "assets/fonts/cormorant-garamond-italic-400-latin.woff2",
+        "assets/fonts/manrope-normal-400-latin.woff2",
+        "assets/fonts/manrope-normal-600-latin.woff2",
+      ].forEach((href) => {
+        const link = document.createElement("link");
+        link.rel = "prefetch";
+        link.href = href;
+        document.head.append(link);
+      });
+    }
+  </script>
+  <!-- Chrome/Edge: render the invitation in the background so it opens instantly -->
+  <script type="speculationrules">
+    { "prerender": [{ "urls": ["invitation.html"], "eagerness": "immediate" }] }
   </script>
 </head>
 <body>

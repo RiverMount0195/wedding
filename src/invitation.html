@@ -19,6 +19,13 @@
     });
     // No cross-document view transitions (e.g. Firefox): use the fade fallback.
     if (!("onpagereveal" in window)) document.documentElement.classList.add("vt-fallback");
+    // Prerendered from the booth page: hold entrance animations until shown.
+    if (document.prerendering) {
+      document.documentElement.classList.add("is-prerendering");
+      document.addEventListener("prerenderingchange", () => {
+        document.documentElement.classList.remove("is-prerendering");
+      }, { once: true });
+    }
   </script>
 </head>
 <body>

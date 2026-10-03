@@ -843,6 +843,12 @@ a {
   animation: vt-out 0.3s var(--ease-out) both;
 }
 
+/* Prerendered in the background (see index.html): wait to play the hero
+   entrance until the page is actually shown */
+.is-prerendering .hero [data-enter] {
+  animation-play-state: paused;
+}
+
 /* Arriving via a transition: show the names at once so the morph lands */
 .js.vt-arrive .hero .hero__names {
   animation: none;
