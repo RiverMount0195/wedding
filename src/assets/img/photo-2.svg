@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 240" role="img" aria-label="Placeholder photo of a couple laughing">
+  <defs>
+    <linearGradient id="bg" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#d9b9a0"/>
+      <stop offset="1" stop-color="#a86b5e"/>
+    </linearGradient>
+  </defs>
+  <rect width="300" height="240" fill="url(#bg)"/>
+  <!-- confetti -->
+  <g fill="#fff6e2" opacity="0.8">
+    <circle cx="40" cy="40" r="4"/><circle cx="252" cy="30" r="3"/><circle cx="214" cy="62" r="2.5"/>
+    <circle cx="70" cy="76" r="2.5"/><circle cx="270" cy="96" r="3.5"/><circle cx="30" cy="120" r="2"/>
+  </g>
+  <!-- left figure, head tilted back -->
+  <circle cx="104" cy="104" r="28" fill="#3a1414"/>
+  <path d="M46 240c0-56 26-88 58-88s58 32 58 88z" fill="#5a1a1c"/>
+  <!-- right figure -->
+  <circle cx="196" cy="94" r="30" fill="#4b0505"/>
+  <path d="M136 240c0-60 26-96 60-96s60 36 60 96z" fill="#2e0303"/>
+</svg>
