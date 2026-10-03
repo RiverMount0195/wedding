@@ -425,7 +425,13 @@ a {
 }
 
 .hero__strip .strip {
-  --strip-w: 150px;
+  /* shrinks with the window so the strips fit beside the names */
+  --strip-w: clamp(100px, 14vw, 150px);
+}
+
+.hero__strip .strip__caption {
+  white-space: nowrap;
+  letter-spacing: 0.18em;
 }
 
 .hero__strip--left {
@@ -438,7 +444,7 @@ a {
   transform: translateY(-46%) rotate(7deg);
 }
 
-@media (min-width: 900px) {
+@media (min-width: 640px) {
   .hero__strip {
     display: block;
   }
@@ -792,6 +798,59 @@ a {
 }
 
 /* ==========================================================================
+   Page transitions (cross-document view transitions)
+   Browsers without support simply navigate as normal.
+   ========================================================================== */
+
+@view-transition {
+  navigation: auto;
+}
+
+/* The couple's names morph between the booth and the invitation hero */
+.booth__intro .script,
+.hero__names {
+  view-transition-name: couple-names;
+}
+
+::view-transition-old(root) {
+  animation: vt-out 0.35s var(--ease-out) both;
+}
+
+::view-transition-new(root) {
+  animation: vt-in 0.5s var(--ease-out) 0.1s both;
+}
+
+::view-transition-group(couple-names) {
+  animation-duration: 0.6s;
+  animation-timing-function: var(--ease-out);
+}
+
+@keyframes vt-out {
+  to { opacity: 0; transform: translateY(-12px); }
+}
+
+@keyframes vt-in {
+  from { opacity: 0; transform: translateY(16px); }
+}
+
+/* Fallback for browsers without cross-document view transitions (Firefox):
+   page-transitions.js adds .is-leaving before navigating. */
+.vt-fallback body {
+  animation: vt-in 0.5s var(--ease-out) both;
+}
+
+.vt-fallback.is-leaving body {
+  animation: vt-out 0.3s var(--ease-out) both;
+}
+
+/* Arriving via a transition: show the names at once so the morph lands */
+.js.vt-arrive .hero .hero__names {
+  animation: none;
+  opacity: 1;
+  transform: none;
+}
+
+/* ==========================================================================
    Reduced motion
    ========================================================================== */
 
@@ -810,5 +869,11 @@ a {
   .js .booth [data-after] {
     opacity: 1;
     transform: none;
+  }
+
+  ::view-transition-group(*),
+  ::view-transition-old(*),
+  ::view-transition-new(*) {
+    animation: none !important;
   }
 }
