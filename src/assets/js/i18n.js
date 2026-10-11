@@ -222,11 +222,14 @@
   };
 
   const root = document.documentElement;
-  let lang = "vi";
-  try {
-    const saved = localStorage.getItem("lang");
-    if (saved === "vi" || saved === "en") lang = saved;
-  } catch (e) {}
+  const saved = () => {
+    try {
+      const value = localStorage.getItem("lang");
+      if (value === "vi" || value === "en") return value;
+    } catch (e) {}
+    return "vi";
+  };
+  let lang = saved();
 
   function t(key, vars) {
     let text = (DICT[lang] && DICT[lang][key]) || DICT.vi[key] || key;
@@ -257,6 +260,25 @@
     apply();
     document.dispatchEvent(new CustomEvent("i18n:change"));
   }
+
+  // The page may have been loaded before the language changed elsewhere: it was
+  // prerendered while the booth page was open, restored from the back/forward
+  // cache, or sits in another tab. Pick up the saved language when it is shown.
+  function sync() {
+    const current = saved();
+    if (current === lang) return;
+    lang = current;
+    apply();
+    document.dispatchEvent(new CustomEvent("i18n:change"));
+  }
+  document.addEventListener("prerenderingchange", sync);
+  window.addEventListener("pageshow", sync);
+  window.addEventListener("storage", (event) => {
+    if (event.key === "lang") sync();
+  });
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden) sync();
+  });
 
   document.addEventListener("click", (event) => {
     if (event.target.closest("[data-lang-toggle]")) set(lang === "vi" ? "en" : "vi");
