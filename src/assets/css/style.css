@@ -670,8 +670,8 @@ a {
   margin: 0 auto;
 }
 
-/* RSVP placeholder */
-.rsvp {
+/* Reply */
+.reply {
   max-width: 520px;
   margin: 0 auto;
   padding: 2rem 1.4rem;
@@ -680,7 +680,7 @@ a {
   text-align: left;
 }
 
-.rsvp__note {
+.reply__note {
   margin: 0 0 1.4rem;
   text-align: center;
   font-family: var(--font-sans);
@@ -690,7 +690,7 @@ a {
   color: var(--brass-light);
 }
 
-.rsvp fieldset {
+.reply fieldset {
   display: grid;
   gap: 1rem;
   margin: 0;
@@ -711,7 +711,8 @@ a {
 }
 
 .field input:not([type="radio"]),
-.field select {
+.field select,
+.field textarea {
   width: 100%;
   padding: 0.8rem 1rem;
   border: 1px solid rgba(201, 162, 92, 0.45);
@@ -744,12 +745,29 @@ a {
   color: var(--cream);
 }
 
-.rsvp :disabled {
+.field textarea {
+  resize: vertical;
+}
+
+.reply__status {
+  min-height: 1.4em;
+  margin: 0;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 1.05rem;
+  color: var(--brass-light);
+}
+
+.reply__status.is-error {
+  color: #ffb4a8;
+}
+
+.reply :disabled {
   cursor: not-allowed;
   opacity: 0.7;
 }
 
-.rsvp .btn {
+.reply .btn {
   justify-self: center;
   margin-top: 0.6rem;
 }
@@ -783,6 +801,21 @@ a {
 .js [data-reveal].is-visible {
   opacity: 1;
   transform: none;
+}
+
+/* Guest greeting: hidden until a name is set; room is reserved on personal links */
+.hero__greeting {
+  margin-bottom: 1rem;
+  color: var(--brass-light);
+}
+
+.hero__greeting:empty {
+  display: none;
+}
+
+.has-guest .hero__greeting:empty {
+  display: block;
+  min-height: 1.2em;
 }
 
 /* Hero entrance */
@@ -882,4 +915,39 @@ a {
   ::view-transition-new(*) {
     animation: none !important;
   }
+}
+
+/* Language toggle */
+.i18n-wait body {
+  visibility: hidden;
+}
+
+.lang {
+  padding: 0.3rem 0.7rem;
+  border: 1px solid rgba(201, 162, 92, 0.55);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font: inherit;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  cursor: pointer;
+}
+
+.lang:hover {
+  color: var(--cream-soft);
+}
+
+.lang--corner {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 5;
+  font-family: var(--font-sans);
+}
+
+.topbar__end {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
 }

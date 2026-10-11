@@ -1,17 +1,26 @@
 <!doctype html>
-<html lang="en">
+<html lang="vi">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- PLACEHOLDER: names -->
-  <title>Tùng &amp; Giang · Invitation</title>
-  <meta name="description" content="Join us for our wedding celebration.">
+  <title data-i18n="inv.title">Tùng &amp; Giang · Thiệp mời</title>
+  <meta name="description" content="Trân trọng kính mời bạn đến dự lễ cưới của chúng mình." data-i18n-attr="content:inv.desc">
   <meta name="theme-color" content="#4b0505">
   <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 64 64%27%3E%3Ccircle cx=%2732%27 cy=%2732%27 r=%2730%27 fill=%27%234b0505%27 stroke=%27%23c9a25c%27 stroke-width=%273%27/%3E%3Cpath d=%27M32 46s-14-8-14-17a7 7 0 0 1 14-2 7 7 0 0 1 14 2c0 9-14 17-14 17z%27 fill=%27%23f6ecd9%27/%3E%3C/svg%3E">
   <link rel="stylesheet" href="assets/css/fonts.css">
   <link rel="stylesheet" href="assets/css/style.css">
   <script>
     document.documentElement.classList.add("js");
+    // Saved non-default language: hide the page until i18n.js has translated it.
+    try {
+      if (localStorage.getItem("lang") === "en") {
+        document.documentElement.classList.add("i18n-wait");
+        setTimeout(() => document.documentElement.classList.remove("i18n-wait"), 2000);
+      }
+    } catch (e) {}
+    // Personal link: reserve room for the greeting so it doesn't shift the hero.
+    if (new URLSearchParams(location.search).has("g")) document.documentElement.classList.add("has-guest");
     // Arriving through a view transition: skip entrance fades on shared
     // elements so the morph lands on visible content.
     addEventListener("pagereveal", (e) => {
@@ -29,11 +38,14 @@
   </script>
 </head>
 <body>
-  <nav class="topbar" aria-label="Site">
-    <a href="index.html">← Photo booth</a>
+  <nav class="topbar" aria-label="Điều hướng" data-i18n-attr="aria-label:nav.label">
+    <a href="/" data-i18n="nav.back">← Photobooth</a>
     <!-- PLACEHOLDER: initials -->
     <span class="monogram" aria-hidden="true">T &amp; G</span>
-    <a href="#rsvp">RSVP</a>
+    <span class="topbar__end">
+      <a href="#reply" data-i18n="nav.reply">Phản hồi</a>
+      <button class="lang" type="button" data-lang-toggle data-i18n="lang.toggle" data-i18n-attr="aria-label:lang.label" aria-label="Switch to English">EN</button>
+    </span>
   </nav>
 
   <main>
@@ -44,27 +56,28 @@
           <div class="strip__frame"><img src="assets/img/photo-1.svg" alt=""></div>
           <div class="strip__frame"><img src="assets/img/photo-2.svg" alt=""></div>
           <div class="strip__frame"><img src="assets/img/photo-1.svg" alt=""></div>
-          <p class="strip__caption">Est. 2027</p>
+          <p class="strip__caption" data-i18n="strip.est">Từ 2027</p>
         </div>
       </div>
 
       <div>
-        <p class="eyebrow" data-enter style="--i:0">We're getting married</p>
+        <p class="eyebrow hero__greeting" id="guest-greeting" data-enter style="--i:0"></p>
+        <p class="eyebrow" data-enter style="--i:1" data-i18n="hero.eyebrow">Chúng mình sắp cưới</p>
         <!-- PLACEHOLDER: names -->
-        <h1 class="hero__names" data-enter style="--i:1">Tùng <span>&amp;</span> Giang</h1>
-        <hr class="divider" data-enter style="--i:2">
+        <h1 class="hero__names" data-enter style="--i:2">Tùng <span>&amp;</span> Giang</h1>
+        <hr class="divider" data-enter style="--i:3">
         <!-- PLACEHOLDER: date and place -->
-        <p class="hero__date" data-enter style="--i:3">Saturday · June 26 · 2027</p>
-        <p class="hero__place" data-enter style="--i:4">The Venue Name, City</p>
-        <div data-enter style="--i:5">
-          <a class="btn" href="#rsvp">Kindly reply</a>
+        <p class="hero__date" data-enter style="--i:4" data-i18n="hero.date">Thứ Bảy · 26 tháng 6 · 2027</p>
+        <p class="hero__place" data-enter style="--i:5" data-i18n="hero.place">Tên địa điểm, Thành phố</p>
+        <div data-enter style="--i:6">
+          <a class="btn" href="#reply" data-i18n="hero.cta">Xác nhận tham dự</a>
         </div>
       </div>
 
       <div class="hero__strip hero__strip--right" aria-hidden="true">
         <div class="strip">
           <div class="strip__frame"><img src="assets/img/photo-2.svg" alt=""></div>
-          <div class="strip__frame strip__frame--title"><span class="script">Forever</span></div>
+          <div class="strip__frame strip__frame--title"><span class="script" data-i18n="strip.forever">Mãi mãi</span></div>
           <div class="strip__frame"><img src="assets/img/photo-1.svg" alt=""></div>
           <p class="strip__caption">06 · 26 · 27</p>
         </div>
@@ -76,14 +89,14 @@
     <!-- Countdown -------------------------------------------------------- -->
     <section class="section section--light" aria-labelledby="countdown-title">
       <div class="container">
-        <p class="eyebrow" data-reveal>Counting down</p>
-        <h2 class="section__title" id="countdown-title" data-reveal>Until we say I do</h2>
+        <p class="eyebrow" data-reveal data-i18n="countdown.eyebrow">Đếm ngược</p>
+        <h2 class="section__title" id="countdown-title" data-reveal data-i18n="countdown.title">Đến ngày chúng mình về chung một nhà</h2>
         <!-- PLACEHOLDER: ceremony start, with your time-zone offset -->
         <div class="countdown" id="countdown" data-date="2027-06-26T16:00:00+07:00" data-reveal>
-          <div class="countdown__unit"><span class="countdown__value" data-unit="days">--</span><span class="countdown__label">Days</span></div>
-          <div class="countdown__unit"><span class="countdown__value" data-unit="hours">--</span><span class="countdown__label">Hours</span></div>
-          <div class="countdown__unit"><span class="countdown__value" data-unit="minutes">--</span><span class="countdown__label">Minutes</span></div>
-          <div class="countdown__unit"><span class="countdown__value" data-unit="seconds">--</span><span class="countdown__label">Seconds</span></div>
+          <div class="countdown__unit"><span class="countdown__value" data-unit="days">--</span><span class="countdown__label" data-i18n="countdown.days">Ngày</span></div>
+          <div class="countdown__unit"><span class="countdown__value" data-unit="hours">--</span><span class="countdown__label" data-i18n="countdown.hours">Giờ</span></div>
+          <div class="countdown__unit"><span class="countdown__value" data-unit="minutes">--</span><span class="countdown__label" data-i18n="countdown.minutes">Phút</span></div>
+          <div class="countdown__unit"><span class="countdown__value" data-unit="seconds">--</span><span class="countdown__label" data-i18n="countdown.seconds">Giây</span></div>
         </div>
       </div>
     </section>
@@ -91,23 +104,23 @@
     <!-- Details ---------------------------------------------------------- -->
     <section class="section" aria-labelledby="details-title">
       <div class="container">
-        <p class="eyebrow" data-reveal>The details</p>
-        <h2 class="section__title" id="details-title" data-reveal>Where &amp; when</h2>
+        <p class="eyebrow" data-reveal data-i18n="details.eyebrow">Chi tiết</p>
+        <h2 class="section__title" id="details-title" data-reveal data-i18n="details.title">Thời gian &amp; địa điểm</h2>
         <!-- PLACEHOLDER: event details and map links -->
         <div class="cards">
           <article class="card" data-reveal>
-            <h3>Ceremony</h3>
-            <p class="card__time">4:00 PM</p>
-            <p>The Chapel Name</p>
-            <p>123 Example Street, City</p>
-            <a class="btn" href="#">View map</a>
+            <h3 data-i18n="details.ceremony">Lễ thành hôn</h3>
+            <p class="card__time" data-i18n="details.ceremonyTime">16:00</p>
+            <p data-i18n="details.ceremonyPlace">Tên nhà thờ</p>
+            <p data-i18n="details.ceremonyAddress">123 Đường Ví Dụ, Thành phố</p>
+            <a class="btn" href="#" data-i18n="details.map">Xem bản đồ</a>
           </article>
           <article class="card" data-reveal>
-            <h3>Reception</h3>
-            <p class="card__time">6:30 PM</p>
-            <p>The Venue Name</p>
-            <p>456 Sample Avenue, City</p>
-            <a class="btn" href="#">View map</a>
+            <h3 data-i18n="details.reception">Tiệc cưới</h3>
+            <p class="card__time" data-i18n="details.receptionTime">18:30</p>
+            <p data-i18n="details.receptionPlace">Tên địa điểm</p>
+            <p data-i18n="details.receptionAddress">456 Đại lộ Mẫu, Thành phố</p>
+            <a class="btn" href="#" data-i18n="details.map">Xem bản đồ</a>
           </article>
         </div>
       </div>
@@ -116,15 +129,15 @@
     <!-- Schedule --------------------------------------------------------- -->
     <section class="section section--light" aria-labelledby="schedule-title">
       <div class="container">
-        <p class="eyebrow" data-reveal>On the day</p>
-        <h2 class="section__title" id="schedule-title" data-reveal>Order of the day</h2>
+        <p class="eyebrow" data-reveal data-i18n="schedule.eyebrow">Trong ngày cưới</p>
+        <h2 class="section__title" id="schedule-title" data-reveal data-i18n="schedule.title">Chương trình</h2>
         <!-- PLACEHOLDER: schedule -->
         <ol class="timeline" data-reveal>
-          <li><time>3:30 PM</time><div><strong>Guests arrive</strong><span>Welcome drinks in the garden</span></div></li>
-          <li><time>4:00 PM</time><div><strong>Ceremony</strong><span>Please be seated by 3:50</span></div></li>
-          <li><time>5:00 PM</time><div><strong>Photo booth &amp; cocktails</strong><span>Print a strip to take home</span></div></li>
-          <li><time>6:30 PM</time><div><strong>Dinner</strong><span>Speeches and toasts</span></div></li>
-          <li><time>8:30 PM</time><div><strong>Dancing</strong><span>Until late</span></div></li>
+          <li><time data-i18n="schedule.t1">15:30</time><div><strong data-i18n="schedule.a1">Đón khách</strong><span data-i18n="schedule.b1">Đồ uống chào mừng trong vườn</span></div></li>
+          <li><time data-i18n="schedule.t2">16:00</time><div><strong data-i18n="schedule.a2">Lễ thành hôn</strong><span data-i18n="schedule.b2">Xin mời quý khách an vị trước 15:50</span></div></li>
+          <li><time data-i18n="schedule.t3">17:00</time><div><strong data-i18n="schedule.a3">Photobooth &amp; cocktail</strong><span data-i18n="schedule.b3">In một dải ảnh mang về làm kỷ niệm</span></div></li>
+          <li><time data-i18n="schedule.t4">18:30</time><div><strong data-i18n="schedule.a4">Tiệc tối</strong><span data-i18n="schedule.b4">Phát biểu và nâng ly chúc mừng</span></div></li>
+          <li><time data-i18n="schedule.t5">20:30</time><div><strong data-i18n="schedule.a5">Khiêu vũ</strong><span data-i18n="schedule.b5">Đến thật khuya</span></div></li>
         </ol>
       </div>
     </section>
@@ -132,14 +145,14 @@
     <!-- Video ------------------------------------------------------------ -->
     <section class="section" aria-labelledby="video-title">
       <div class="container">
-        <p class="eyebrow" data-reveal>Our story</p>
-        <h2 class="section__title" id="video-title" data-reveal>A little film</h2>
+        <p class="eyebrow" data-reveal data-i18n="video.eyebrow">Câu chuyện của chúng mình</p>
+        <h2 class="section__title" id="video-title" data-reveal data-i18n="video.title">Một thước phim nhỏ</h2>
         <div class="video" data-reveal>
           <!-- PLACEHOLDER: replace this block with your own video, e.g.
                <video src="assets/video/our-story.mp4" poster="assets/img/poster.jpg" controls playsinline preload="metadata"></video> -->
           <div class="video__placeholder">
             <span class="video__play" aria-hidden="true"></span>
-            <span>Your video goes here</span>
+            <span data-i18n="video.placeholder">Video của bạn sẽ ở đây</span>
           </div>
         </div>
       </div>
@@ -148,46 +161,53 @@
     <!-- Dress code ------------------------------------------------------- -->
     <section class="section section--light" aria-labelledby="dress-title">
       <div class="container">
-        <p class="eyebrow" data-reveal>What to wear</p>
-        <h2 class="section__title" id="dress-title" data-reveal>Dress code</h2>
+        <p class="eyebrow" data-reveal data-i18n="dress.eyebrow">Nên mặc gì</p>
+        <h2 class="section__title" id="dress-title" data-reveal data-i18n="dress.title">Trang phục</h2>
         <!-- PLACEHOLDER: dress code -->
-        <p class="prose" data-reveal>Black tie optional. We'd love to see deep reds, warm neutrals and a touch of gold.</p>
-        <ul class="swatches" aria-label="Suggested colours" data-reveal>
-          <li style="background:#4b0505" title="Burgundy"></li>
-          <li style="background:#8c2f2b" title="Garnet"></li>
-          <li style="background:#c9a25c" title="Antique gold"></li>
-          <li style="background:#e9d3b8" title="Champagne"></li>
-          <li style="background:#2a1414" title="Espresso"></li>
+        <p class="prose" data-reveal data-i18n="dress.prose">Trang phục lịch sự. Chúng mình rất muốn thấy những gam đỏ đậm, màu trung tính ấm áp và một chút ánh vàng.</p>
+        <ul class="swatches" aria-label="Màu sắc gợi ý" data-i18n-attr="aria-label:dress.swatches" data-reveal>
+          <li style="background:#4b0505" title="Đỏ burgundy" data-i18n-attr="title:dress.burgundy"></li>
+          <li style="background:#8c2f2b" title="Đỏ garnet" data-i18n-attr="title:dress.garnet"></li>
+          <li style="background:#c9a25c" title="Vàng cổ điển" data-i18n-attr="title:dress.gold"></li>
+          <li style="background:#e9d3b8" title="Champagne" data-i18n-attr="title:dress.champagne"></li>
+          <li style="background:#2a1414" title="Nâu espresso" data-i18n-attr="title:dress.espresso"></li>
         </ul>
       </div>
     </section>
 
-    <!-- RSVP (placeholder) ----------------------------------------------- -->
-    <section class="section" id="rsvp" aria-labelledby="rsvp-title">
+    <!-- Reply ------------------------------------------------------------- -->
+    <section class="section" id="reply" aria-labelledby="reply-title">
       <div class="container">
-        <p class="eyebrow" data-reveal>Kindly reply by May 1, 2027</p>
-        <h2 class="section__title" id="rsvp-title" data-reveal>Will you join us?</h2>
-        <!-- PLACEHOLDER: not connected yet — wire up to a form service later -->
-        <form class="rsvp" data-reveal onsubmit="return false">
-          <p class="rsvp__note">RSVP form coming soon</p>
-          <fieldset disabled>
+        <p class="eyebrow" data-reveal data-i18n="reply.eyebrow">Vui lòng phản hồi trước ngày 1 tháng 5, 2027</p>
+        <h2 class="section__title" id="reply-title" data-reveal data-i18n="reply.title">Bạn sẽ đến chứ?</h2>
+        <form class="reply" id="reply-form" data-reveal>
+          <p class="reply__note" id="reply-note" data-i18n="reply.noteLocked">Vui lòng mở đường dẫn thiệp mời riêng của bạn để phản hồi</p>
+          <fieldset id="reply-fields" disabled>
             <div class="field">
-              <label for="rsvp-name">Full name</label>
-              <input id="rsvp-name" name="name" type="text" autocomplete="name" placeholder="Your name">
+              <label for="reply-name" data-i18n="reply.name">Họ và tên</label>
+              <input id="reply-name" name="name" type="text" autocomplete="name" placeholder="Tên của bạn" data-i18n-attr="placeholder:reply.namePlaceholder" maxlength="100" required>
             </div>
             <fieldset class="field field--choice">
-              <legend>Attending</legend>
-              <label><input type="radio" name="attending" value="yes"> Joyfully accepts</label>
-              <label><input type="radio" name="attending" value="no"> Regretfully declines</label>
+              <legend data-i18n="reply.attending">Tham dự</legend>
+              <label><input type="radio" name="attending" value="yes" required> <span data-i18n="reply.yes">Rất vui được tham dự</span></label>
+              <label><input type="radio" name="attending" value="no"> <span data-i18n="reply.no">Tiếc là không thể tham dự</span></label>
             </fieldset>
-            <div class="field">
-              <label for="rsvp-guests">Number of guests</label>
-              <select id="rsvp-guests" name="guests">
+            <div class="field" id="reply-guests-field">
+              <label for="reply-guests" data-i18n="reply.guests">Số người tham dự</label>
+              <select id="reply-guests" name="guests">
                 <option>1</option>
                 <option>2</option>
+                <option>3</option>
+                <option>4</option>
+                <option>5</option>
               </select>
             </div>
-            <button class="btn" type="submit">Send reply</button>
+            <div class="field">
+              <label for="reply-message" data-i18n="reply.message">Lời nhắn gửi đến cô dâu chú rể (không bắt buộc)</label>
+              <textarea id="reply-message" name="message" rows="3" maxlength="1000"></textarea>
+            </div>
+            <button class="btn" type="submit" data-i18n="reply.submit">Gửi phản hồi</button>
+            <p class="reply__status" id="reply-status" role="status" aria-live="polite"></p>
           </fieldset>
         </form>
       </div>
@@ -197,9 +217,10 @@
   <footer class="footer">
     <!-- PLACEHOLDER: initials -->
     <span class="monogram" aria-hidden="true">T &amp; G</span>
-    <p>June 26, 2027 · City</p>
+    <p data-i18n="footer.date">26 tháng 6, 2027 · Thành phố</p>
   </footer>
 
+  <script src="assets/js/i18n.js"></script>
   <script src="assets/js/invitation.js"></script>
   <script src="assets/js/page-transitions.js"></script>
 </body>

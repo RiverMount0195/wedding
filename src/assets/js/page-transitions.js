@@ -18,7 +18,7 @@
 
     const url = new URL(link.href, location.href);
     if (url.origin !== location.origin) return;
-    // Same-page anchors (#rsvp) scroll as normal
+    // Same-page anchors (#reply) scroll as normal
     if (url.pathname === location.pathname && url.search === location.search) return;
 
     e.preventDefault();
