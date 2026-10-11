@@ -699,7 +699,8 @@ a {
 }
 
 .field label,
-.field legend {
+.field legend,
+.field__label {
   display: block;
   margin-bottom: 0.35rem;
   padding: 0;
@@ -711,7 +712,6 @@ a {
 }
 
 .field input:not([type="radio"]),
-.field select,
 .field textarea {
   width: 100%;
   padding: 0.8rem 1rem;
@@ -747,6 +747,57 @@ a {
 
 .field textarea {
   resize: vertical;
+}
+
+/* Number-of-guests stepper */
+.field__label {
+  margin: 0 0 0.35rem;
+}
+
+.stepper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.6rem;
+}
+
+.stepper__btn {
+  width: 2.75rem;
+  height: 2.75rem;
+  padding: 0;
+  border: 1px solid var(--brass);
+  border-radius: 50%;
+  background: transparent;
+  color: var(--cream-soft);
+  font-family: var(--font-sans);
+  font-size: 1.3rem;
+  line-height: 1;
+  cursor: pointer;
+  transition: background-color 0.3s, color 0.3s, opacity 0.3s;
+}
+
+.stepper__btn:not(:disabled):hover {
+  background: var(--brass);
+  color: var(--burgundy-deep);
+}
+
+.stepper__btn.is-limit {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.stepper__btn.is-limit:not(:disabled):hover {
+  background: transparent;
+  color: var(--cream-soft);
+}
+
+.stepper__value {
+  min-width: 2ch;
+  text-align: center;
+  font-family: var(--font-serif);
+  font-size: 2.2rem;
+  font-variant-numeric: tabular-nums;
+  color: var(--cream-soft);
 }
 
 .reply__status {

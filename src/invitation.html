@@ -193,14 +193,13 @@
               <label><input type="radio" name="attending" value="no"> <span data-i18n="reply.no">Tiếc là không thể tham dự</span></label>
             </fieldset>
             <div class="field" id="reply-guests-field">
-              <label for="reply-guests" data-i18n="reply.guests">Số người tham dự</label>
-              <select id="reply-guests" name="guests">
-                <option>1</option>
-                <option>2</option>
-                <option>3</option>
-                <option>4</option>
-                <option>5</option>
-              </select>
+              <p class="field__label" id="reply-guests-label" data-i18n="reply.guests">Số người tham dự</p>
+              <div class="stepper" role="group" aria-labelledby="reply-guests-label">
+                <button class="stepper__btn" type="button" data-step="-1" aria-label="Giảm số người" data-i18n-attr="aria-label:reply.guestsLess">&minus;</button>
+                <output class="stepper__value" id="reply-guests-value" aria-live="polite">1</output>
+                <button class="stepper__btn" type="button" data-step="1" aria-label="Tăng số người" data-i18n-attr="aria-label:reply.guestsMore">+</button>
+                <input type="hidden" id="reply-guests" name="guests" value="1">
+              </div>
             </div>
             <div class="field">
               <label for="reply-message" data-i18n="reply.message">Lời nhắn gửi đến cô dâu chú rể (không bắt buộc)</label>

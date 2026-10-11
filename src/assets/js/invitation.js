@@ -50,6 +50,21 @@
     const status = document.getElementById("reply-status");
     const guestsField = document.getElementById("reply-guests-field");
     const attendingInputs = form.querySelectorAll('input[name="attending"]');
+    const MAX_GUESTS = 5;
+    const guestsInput = document.getElementById("reply-guests");
+    const guestsValue = document.getElementById("reply-guests-value");
+    const stepButtons = form.querySelectorAll(".stepper__btn");
+    const setGuests = (n) => {
+      const count = Math.min(MAX_GUESTS, Math.max(1, Math.round(Number(n)) || 1));
+      guestsInput.value = String(count);
+      guestsValue.textContent = String(count);
+      stepButtons[0].classList.toggle("is-limit", count <= 1);
+      stepButtons[1].classList.toggle("is-limit", count >= MAX_GUESTS);
+      stepButtons.forEach((button) => button.setAttribute("aria-disabled", button.classList.contains("is-limit")));
+    };
+    stepButtons.forEach((button) =>
+      button.addEventListener("click", () => setGuests(Number(guestsInput.value) + Number(button.dataset.step)))
+    );
     // Notes and statuses are keys, so i18n.apply() keeps them in the current language.
     const setNote = (key) => {
       note.dataset.i18n = key;
@@ -77,7 +92,7 @@
         if (!reply) return;
         form.elements.name.value = reply.name;
         form.elements.attending.value = reply.attending ? "yes" : "no";
-        if (reply.attending) form.elements.guests.value = String(reply.guests);
+        if (reply.attending) setGuests(reply.guests);
         form.elements.message.value = reply.message;
         syncGuests();
         setNote("reply.noteDone");
