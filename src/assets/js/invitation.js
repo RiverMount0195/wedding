@@ -1,42 +1,58 @@
-// Invitation page: guest greeting, local countdown + reveal-on-scroll.
+// Invitation page: guest greeting, reply form, local countdown + reveal-on-scroll.
 (function () {
-  // Guest greeting --------------------------------------------------------
-  // The booth page stores the guest's name in localStorage; if that's missing
-  // (direct visit), fetch it. The API response is HTTP-cached, so a fetch that
-  // follows the booth's one is served from cache.
+  // Guest data -------------------------------------------------------------
+  // Everything we know about the guest (token, name, last reply) is kept in
+  // localStorage under "guest". A personal link (?g=<token>) fills it; later
+  // visits without a token use the saved copy. The server stays the source of
+  // truth and refreshes the saved copy in the background.
+  const TOKEN = /^[A-Za-z0-9_-]{22}$/;
+  const urlToken = new URLSearchParams(location.search).get("g");
+  const linkToken = urlToken && TOKEN.test(urlToken) ? urlToken : "";
+
+  let saved = null;
+  try {
+    saved = JSON.parse(localStorage.getItem("guest"));
+  } catch (e) {}
+  if (!saved || !TOKEN.test(saved.token || "")) saved = null;
+  // A different personal link means a different guest: forget the old data.
+  if (linkToken && saved && saved.token !== linkToken) saved = null;
+
+  const token = linkToken || (saved ? saved.token : "");
+  const remember = (patch) => {
+    saved = Object.assign({ token }, saved, patch);
+    try {
+      localStorage.setItem("guest", JSON.stringify(saved));
+    } catch (e) {}
+  };
+  if (linkToken && !saved) remember({});
+
+  // Keep the personal link when going back to the photo booth.
+  const back = document.querySelector('.topbar a[href="/"]');
+  if (back && linkToken) back.href = "/?g=" + linkToken;
+
+  // Greeting --------------------------------------------------------------
   const greeting = document.getElementById("guest-greeting");
-  const token = new URLSearchParams(location.search).get("g");
   let guestName = "";
   const renderGreeting = () => {
     if (greeting && guestName) greeting.textContent = t("greeting", { name: guestName });
   };
   document.addEventListener("i18n:change", renderGreeting);
-  const validToken = token && /^[A-Za-z0-9_-]{22}$/.test(token);
-  // Keep the personal link when going back to the photo booth.
-  const back = document.querySelector('.topbar a[href="/"]');
-  if (back && validToken) back.href = "/?g=" + token;
-  if (greeting && validToken) {
-    const show = (name) => {
-      guestName = name;
-      renderGreeting();
-      const field = document.getElementById("reply-name");
-      if (field && !field.value) field.value = name;
-    };
-    let stored = null;
-    try {
-      stored = JSON.parse(localStorage.getItem("guest"));
-    } catch (e) {}
-    if (stored && stored.token === token && stored.name) {
-      show(stored.name);
+  const nameField = document.getElementById("reply-name");
+  const showName = (name) => {
+    guestName = name;
+    renderGreeting();
+    if (nameField && !nameField.value) nameField.value = name;
+  };
+  if (token) {
+    if (saved && saved.name) {
+      showName(saved.name);
     } else {
       fetch("/api/guest?g=" + token)
         .then((res) => (res.ok ? res.json() : null))
         .then((guest) => {
           if (!guest || !guest.name) return;
-          show(guest.name);
-          try {
-            localStorage.setItem("guest", JSON.stringify({ token, name: guest.name }));
-          } catch (e) {}
+          remember({ name: guest.name });
+          showName(guest.name);
         })
         .catch(() => {});
     }
@@ -44,7 +60,7 @@
 
   // Reply ------------------------------------------------------------------
   const form = document.getElementById("reply-form");
-  if (form && token && /^[A-Za-z0-9_-]{22}$/.test(token)) {
+  if (form && token) {
     const fields = document.getElementById("reply-fields");
     const note = document.getElementById("reply-note");
     const status = document.getElementById("reply-status");
@@ -81,42 +97,50 @@
     };
     attendingInputs.forEach((input) => input.addEventListener("change", syncGuests));
 
+    const fillForm = (reply) => {
+      form.elements.name.value = reply.name;
+      form.elements.attending.value = reply.attending ? "yes" : "no";
+      if (reply.attending) setGuests(reply.guests);
+      form.elements.message.value = reply.message;
+      syncGuests();
+      setNote("reply.noteDone");
+    };
+
     fields.disabled = false;
     setNote("reply.noteOpen");
     syncGuests();
 
-    // A guest who already replied sees (and can change) their answer.
+    // A guest who already replied sees (and can change) their answer: first
+    // from the saved copy, then refreshed from the server.
+    if (saved && saved.reply) fillForm(saved.reply);
     fetch("/api/reply?g=" + token)
       .then((res) => (res.ok ? res.json() : null))
       .then((reply) => {
         if (!reply) return;
-        form.elements.name.value = reply.name;
-        form.elements.attending.value = reply.attending ? "yes" : "no";
-        if (reply.attending) setGuests(reply.guests);
-        form.elements.message.value = reply.message;
-        syncGuests();
-        setNote("reply.noteDone");
+        remember({ reply });
+        fillForm(reply);
       })
       .catch(() => {});
 
     form.addEventListener("submit", async (event) => {
       event.preventDefault();
       const attending = form.elements.attending.value === "yes";
+      const reply = {
+        name: form.elements.name.value.trim(),
+        attending,
+        guests: attending ? Number(form.elements.guests.value) : 0,
+        message: form.elements.message.value.trim(),
+      };
       fields.disabled = true;
       setStatus("reply.sending");
       try {
         const res = await fetch("/api/reply", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            g: token,
-            name: form.elements.name.value,
-            attending,
-            guests: Number(form.elements.guests.value),
-            message: form.elements.message.value,
-          }),
+          body: JSON.stringify(Object.assign({ g: token }, reply)),
         });
         if (res.ok) {
+          remember({ reply });
           setNote("reply.noteDone");
           setStatus(attending ? "reply.thanksYes" : "reply.thanksNo");
         } else {

@@ -35,7 +35,12 @@
       fetch(guestApi)
         .then((res) => (res.ok ? res.json() : null))
         .then((guest) => {
-          if (guest && guest.name) localStorage.setItem("guest", JSON.stringify({ token, name: guest.name }));
+          if (!guest || !guest.name) return;
+          // Same guest: keep what we saved before (e.g. their reply).
+          let saved = null;
+          try { saved = JSON.parse(localStorage.getItem("guest")); } catch (e) {}
+          const keep = saved && saved.token === token ? saved : {};
+          localStorage.setItem("guest", JSON.stringify(Object.assign({}, keep, { token, name: guest.name })));
         })
         .catch(() => {});
     }
