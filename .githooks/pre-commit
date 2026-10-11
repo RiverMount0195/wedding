@@ -1,0 +1,16 @@
+#!/bin/sh
+# Replace the D1 database_id in the *staged* wrangler.toml with a placeholder.
+# The working copy keeps the real id, so deploys from this machine still work.
+file=wrangler.toml
+placeholder=REPLACE_WITH_D1_DATABASE_ID
+
+git diff --cached --name-only | grep -qx "$file" || exit 0
+
+staged=$(git show ":$file")
+clean=$(printf '%s\n' "$staged" | sed -E "s/^([[:space:]]*database_id[[:space:]]*=[[:space:]]*)\"[^\"]*\"/\1\"$placeholder\"/")
+[ "$staged" = "$clean" ] && exit 0
+
+hash=$(printf '%s\n' "$clean" | git hash-object -w --stdin) || exit 1
+mode=$(git ls-files -s -- "$file" | cut -d' ' -f1)
+git update-index --cacheinfo "$mode,$hash,$file" || exit 1
+echo "pre-commit: replaced database_id in staged $file with $placeholder"

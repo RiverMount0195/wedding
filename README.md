@@ -18,3 +18,7 @@ Wedding invitation: a photo-booth save-the-date page and a personalised invitati
 5. `npx wrangler pages project create <name> --production-branch main`, then `npx wrangler pages deploy src --project-name <name>`
 
 Local development: `npx wrangler pages dev src`.
+
+## Git hook
+
+`.githooks/pre-commit` swaps the `database_id` in the staged `wrangler.toml` for a placeholder, so the real id never reaches a commit while your working copy keeps it. Enable it once per clone: `git config core.hooksPath .githooks`.
